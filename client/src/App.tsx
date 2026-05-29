@@ -1,25 +1,16 @@
-import {
-    useEffect,
-    useState
-} from 'react';
-import './App.css'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { SignupLogin } from './components/signup_login/signup_login';
 
 function App() {
-    const [data, setData] = useState("")
+    const route = createBrowserRouter([
+        { path: "/", element: <SignupLogin /> }
+    ])
 
-    useEffect(() => {
-        fetch("http://localhost:8000")
-            .then(res => res.json())
-            .then(d => {
-                setData(JSON.stringify(d, null, 2));
-            });
-    }, [])
 
     return (
-        <>
-            <div>This is a test</div>
-            <div>{data}</div>
-        </>
+        <div id="app">
+            <RouterProvider router={route} />
+        </div>
     )
 }
 
