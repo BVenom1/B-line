@@ -1,23 +1,22 @@
 import React, { useState } from 'react'
 import "./signup_login.css";
 
-interface Props {
+interface SignupProps {
     switchLoginSignup: () => void;
 }
 
-const onSignupSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const data = new FormData(e.currentTarget);
-    console.log("Signup", [...data.entries()])
-}
+const Signup = ({ switchLoginSignup }: SignupProps) => {
 
-const onLoginSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const data = new FormData(e.currentTarget);
-    console.log("Login", [...data.entries()])
-}
+    const onSignupSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const data = new FormData(e.currentTarget);
+        // console.log("Signup", [...data.entries()])
 
-const Signup = ({ switchLoginSignup }: Props) => {
+        // attempt signing up with the given name, email & password
+
+        // switch to login page upon successful signing up
+    }
+
     return (
         <div className='container'>
             <div className="title">Sign Up</div>
@@ -66,7 +65,23 @@ const Signup = ({ switchLoginSignup }: Props) => {
     )
 }
 
-const Login = ({ switchLoginSignup }: Props) => {
+interface LoginProps {
+    switchLoginSignup: () => void;
+    onSuccessfulLogin: (name: string, email: string) => void;
+}
+
+const Login = ({ switchLoginSignup, onSuccessfulLogin }: LoginProps) => {
+
+    const onLoginSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const data = new FormData(e.currentTarget);
+
+        // try logging in with given email & password
+
+        // call the onSuccessfulLogin function upon successful login
+        onSuccessfulLogin("name", data.get("email")?.toString() ?? "")
+    }
+
     return (
         <div className='container'>
             <div className="title">Log In</div>
@@ -103,7 +118,11 @@ const Login = ({ switchLoginSignup }: Props) => {
     )
 }
 
-export const SignupLogin = () => {
+interface EProps {
+    onSuccessfulLogin: (name: string, email: string) => void;
+}
+
+export const SignupLogin = ({ onSuccessfulLogin }: EProps) => {
     const [hasAccount, setHasAccount] = useState(false)
 
     const switcher = () => {
@@ -112,7 +131,7 @@ export const SignupLogin = () => {
 
     return (
         <>
-            {hasAccount ? <Login switchLoginSignup={switcher} /> : <Signup switchLoginSignup={switcher} />}
+            {hasAccount ? <Login switchLoginSignup={switcher} onSuccessfulLogin={onSuccessfulLogin} /> : <Signup switchLoginSignup={switcher} />}
         </>
     )
 }
