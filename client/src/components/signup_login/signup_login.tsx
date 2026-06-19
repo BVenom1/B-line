@@ -12,9 +12,7 @@ const Signup = ({ switchLoginSignup }: SignupProps) => {
     const onSignupSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
         const data = new FormData(e.currentTarget);
-        // console.log(Object.fromEntries(data.entries()))
 
-        // attempt signing up with the given name, email & password
         const res = await fetch("http://localhost:8000/signup", {
             method: "POST",
             headers: {
@@ -85,14 +83,24 @@ interface LoginProps {
 
 const Login = ({ switchLoginSignup, onSuccessfulLogin }: LoginProps) => {
 
-    const onLoginSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+    const [hint, setHint] = useState("Don't have an account?")
+
+    const onLoginSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
         const data = new FormData(e.currentTarget);
 
-        // try logging in with given email & password
+        const res = await fetch("http://localhost:8000/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ ...Object.fromEntries(data.entries()), name: null })
+        });
 
-        // call the onSuccessfulLogin function upon successful login
-        onSuccessfulLogin("name", data.get("email")?.toString() ?? "")
+        const result = await res.json();
+
+        if (result.status == 200) onSuccessfulLogin(result.item.name, result.item.email);
+        else setHint(result.message);
     }
 
     return (
@@ -125,7 +133,7 @@ const Login = ({ switchLoginSignup, onSuccessfulLogin }: LoginProps) => {
                 </div>
                 <button type='submit'>Log In</button>
             </form>
-            <div>Don't have an account?</div>
+            <div>{hint}</div>
             <button onClick={switchLoginSignup}>Sign Up</button>
         </div>
     )
