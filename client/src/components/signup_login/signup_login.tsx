@@ -7,14 +7,27 @@ interface SignupProps {
 
 const Signup = ({ switchLoginSignup }: SignupProps) => {
 
+    const [hint, setHint] = useState("Already have an account?")
+
     const onSignupSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
         const data = new FormData(e.currentTarget);
-        // console.log("Signup", [...data.entries()])
+        // console.log(Object.fromEntries(data.entries()))
 
         // attempt signing up with the given name, email & password
+        const res = await fetch("http://localhost:8000/signup", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(Object.fromEntries(data.entries()))
+        });
 
-        // switch to login page upon successful signing up
+        const result = await res.json();
+
+        if (result.status == 400) {
+            setHint(result.message);
+        } else switchLoginSignup();
     }
 
     return (
@@ -59,7 +72,7 @@ const Signup = ({ switchLoginSignup }: SignupProps) => {
                 </div>
                 <button type='submit'>Sign Up</button>
             </form>
-            <div>Already have an account?</div>
+            <div>{hint}</div>
             <button onClick={switchLoginSignup}>Log In</button>
         </div>
     )
