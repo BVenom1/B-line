@@ -36,7 +36,7 @@ class ResponseModel(BaseModel):
     def __init__(self, status, message, item):
         super().__init__(status=status, message=message, item=item)
 
-@app.post("/signup", response_model=ResponseModel)
+@app.post("/signup", response_model=UserModel)
 async def signup(user: UserModel, db: Session = Depends(get_db)):
     db_user = User(name = user.name, email = user.email, password = user.password)
     check = db.query(User).filter(User.email == user.email).first()
@@ -46,18 +46,18 @@ async def signup(user: UserModel, db: Session = Depends(get_db)):
             db.add(db_user)
             db.commit()
             db.refresh(db_user)
-            return ResponseModel(201, "New user created", UserModel(db_user.name, db_user.email, None))
+            return UserModel(db_user.name, db_user.email, None)
         else:
-            return ResponseModel(400, "Username is taken", None)
+            raise HTTPException(400, detail="Username is taken")
     else:
-        return ResponseModel(400, "Email is already registered. Try logging in", None)
+        raise HTTPException(400, detail="Email is already registered. Try logging in")
 
-@app.post("/login", response_model=ResponseModel)
+@app.post("/login", response_model=UserModel)
 async def login(user: UserModel, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.email == user.email).first()
     if db_user == None:
-        return ResponseModel(404, "User does not exist. Try signing up", None)
+        raise HTTPException(404, detail="User does not exist. Try signing up")
     elif user.password == db_user.password:
-        return ResponseModel(200, "User logged in", UserModel(db_user.name, db_user.email, None))
+        return UserModel(db_user.name, db_user.email, None)
     else:
-        return ResponseModel(401, "Incorrect password", None)
+        raise HTTPException(401, detail="Incorrect password")

@@ -1,6 +1,8 @@
 import { SignupLogin } from './components/signup_login/signup_login';
 import { useState } from 'react';
 import { MainPage } from './components/main_page/main_page';
+import { Message } from './components/messages/message';
+import "./app.css";
 
 function App() {
     const [user, setUser] = useState<Record<string, string>>({});
@@ -16,5 +18,16 @@ function App() {
         }
     </>)
 }
+
+export const Test = () => {
+    return (
+        <div className='test'>
+            <div>Test</div>
+            <Message msg='This is an incoming message' name='name' user_id={2} date={new Date()} />
+            <Message msg='This is an outgoing message' name='name' user_id={2} date={new Date()} is_own_msg />
+        </div>
+    )
+}
+
 
 export default App

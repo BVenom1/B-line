@@ -23,9 +23,8 @@ const Signup = ({ switchLoginSignup }: SignupProps) => {
 
         const result = await res.json();
 
-        if (result.status == 400) {
-            setHint(result.message);
-        } else switchLoginSignup();
+        if (!res.ok) setHint(res.status + ": " + result.detail);
+        else switchLoginSignup();
     }
 
     return (
@@ -97,10 +96,10 @@ const Login = ({ switchLoginSignup, onSuccessfulLogin }: LoginProps) => {
             body: JSON.stringify({ ...Object.fromEntries(data.entries()), name: null })
         });
 
-        const result = await res.json();
+        const result = await res.json()
 
-        if (result.status == 200) onSuccessfulLogin(result.item.name, result.item.email);
-        else setHint(result.message);
+        if (!res.ok) setHint(res.status + ": " + result.detail);
+        else onSuccessfulLogin(result.name, result.email);
     }
 
     return (
