@@ -1,7 +1,10 @@
 from sqlalchemy import Column, Integer, String
 from database import Base
+from datetime import datetime
 
 from pydantic import BaseModel, EmailStr
+
+# users
 
 class User(Base):
     __tablename__ = "users"
@@ -16,3 +19,13 @@ class UserModel(BaseModel):
     password: str | None = None
     def __init__(self, name, email, password):
         super().__init__(name=name, email=email, password=password)
+
+# messages
+
+class Message(Base):
+    pass
+
+class MessageModel(BaseModel):
+    user_id: int
+    msg: str
+    timestamp: datetime

@@ -1,6 +1,6 @@
 import "./message.css";
 
-interface MessageProps {
+export interface MessageProps {
     msg: string;
     name: string;
     user_id: number;
