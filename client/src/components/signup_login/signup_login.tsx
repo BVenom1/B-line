@@ -18,7 +18,7 @@ const Signup = ({ switchLoginSignup }: SignupProps) => {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(Object.fromEntries(data.entries()))
+            body: JSON.stringify({ ...Object.fromEntries(data.entries()), id: null })
         });
 
         const result = await res.json();
@@ -77,7 +77,7 @@ const Signup = ({ switchLoginSignup }: SignupProps) => {
 
 interface LoginProps {
     switchLoginSignup: () => void;
-    onSuccessfulLogin: (name: string, email: string) => void;
+    onSuccessfulLogin: (user: any) => void;
 }
 
 const Login = ({ switchLoginSignup, onSuccessfulLogin }: LoginProps) => {
@@ -93,13 +93,13 @@ const Login = ({ switchLoginSignup, onSuccessfulLogin }: LoginProps) => {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ ...Object.fromEntries(data.entries()), name: null })
+            body: JSON.stringify({ ...Object.fromEntries(data.entries()), name: null, id: null })
         });
 
         const result = await res.json()
 
         if (!res.ok) setHint(res.status + ": " + result.detail);
-        else onSuccessfulLogin(result.name, result.email);
+        else onSuccessfulLogin(result);
     }
 
     return (
@@ -139,7 +139,7 @@ const Login = ({ switchLoginSignup, onSuccessfulLogin }: LoginProps) => {
 }
 
 interface EProps {
-    onSuccessfulLogin: (name: string, email: string) => void;
+    onSuccessfulLogin: (user: any) => void;
 }
 
 export const SignupLogin = ({ onSuccessfulLogin }: EProps) => {

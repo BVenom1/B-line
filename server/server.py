@@ -65,7 +65,7 @@ async def new_message(m: MessageModel, db: Session = Depends(get_db)) -> Message
         db.refresh(db_message)
         return m
 
-@app.get("latest_messages")
+@app.get("/latest_messages")
 async def get_latest_messages(db: Session = Depends(get_db)) -> list[MessageModel]:
     db_latest_msgs = db.query(Message).order_by(Message.timestamp.desc()).limit(10).all()
     return [MessageModel(m.id, m.user_id, m.username, m.msg, m.timestamp) for m in db_latest_msgs]

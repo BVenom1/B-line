@@ -1,5 +1,5 @@
 interface MainPageProps {
-    user: Record<string, string>;
+    user: Record<string, any>;
 }
 
 export const MainPage = ({ user }: MainPageProps) => {
